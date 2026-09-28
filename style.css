@@ -75,3 +75,52 @@ footer{padding:2rem 5%;background:var(--pav);color:#cfdccb}
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
   .ti{opacity:1}}
+
+/* more motion, latest matches, teams, game, contact */
+.hero h1,.hero p,.hero .btn{animation:rise .8s backwards}
+.hero p{animation-delay:.2s}.hero .btn{animation-delay:.4s}.hero .btn+.btn{animation-delay:.5s}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+#bar{position:fixed;top:0;left:0;height:4px;width:0;background:var(--brass);z-index:9}
+.nav div a{position:relative}
+.nav div a::after{content:"";position:absolute;left:0;bottom:-4px;height:2px;width:0;background:var(--brass);transition:width .25s}
+.nav div a:hover::after{width:100%}
+.opt.no{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+footer{border-top:1px solid rgba(255,255,255,.15)}
+
+.tint{background:#e4ece0}
+.m{padding:1.4rem 0;border-top:2px solid var(--pav)}
+.m small{display:block;opacity:.7;margin-bottom:.6rem}
+.row{display:grid;grid-template-columns:130px 1fr 80px;align-items:center;gap:.8rem;margin:.35rem 0}
+.row span{font-weight:600}
+.row i{display:block;height:14px;width:0;border-radius:7px;background:#a9b8a4;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.row.win i{background:var(--out)}
+.m.on .row i{width:var(--w)}
+.m .res{color:var(--ball);margin-top:.5rem}
+
+.tp{max-width:46rem;animation:in .5s both}
+.tp h3{font-size:2rem;color:#fff}
+.tp p{margin:.4rem 0}
+.tp ul{margin:1rem 0 0 1.2rem}
+.tp li::marker{color:var(--brass)}
+
+.field{position:relative;height:200px;border-radius:10px;overflow:hidden;cursor:pointer;touch-action:manipulation;background:repeating-linear-gradient(90deg,var(--out) 0 50px,var(--out2) 50px 100px)}
+.field::before{content:"";position:absolute;left:0;right:0;top:50%;height:50px;margin-top:-10px;background:#cdb37a}
+.zone{position:absolute;left:78%;width:8%;top:0;bottom:0;background:rgba(255,255,255,.18);border-left:2px dashed #fff;border-right:2px dashed #fff}
+.bat{position:absolute;left:82%;bottom:22px;width:14px;height:110px;margin-left:-7px;border-radius:6px 6px 3px 3px;background:#e3c58f;transform-origin:50% 100%;transform:rotate(-15deg)}
+.bat.sw{animation:sw .3s}
+@keyframes sw{40%{transform:rotate(-90deg)}}
+.gball{position:absolute;left:0;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e0454d,var(--ball) 60%,#6f1017);transform:translate(-50%,0)}
+.pop{position:absolute;left:50%;top:14px;transform:translateX(-50%);font:800 2.4rem 'Bricolage Grotesque',sans-serif;color:#fff;opacity:0;pointer-events:none}
+.pop.show{animation:pop .9s}
+@keyframes pop{0%{opacity:0;transform:translateX(-50%) scale(.5)}20%{opacity:1;transform:translateX(-50%) scale(1.15)}80%{opacity:1;transform:translateX(-50%) scale(1)}100%{opacity:0}}
+.gbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-top:1rem;font-weight:600}
+.gbar .btn{margin:0}
+
+.ct{display:flex;flex-wrap:wrap;gap:1.2rem}
+.ct a{display:block;min-width:280px;padding:1.2rem 1.5rem;border:2px solid var(--brass);border-radius:10px;color:#fff;text-decoration:none;transition:transform .25s,background .25s}
+.ct a:hover{background:rgba(217,180,90,.15);transform:translateY(-4px)}
+.ct b{display:block;font-size:1.3rem;color:var(--brass)}
+@media(max-width:760px){.row{grid-template-columns:96px 1fr 70px}.field{height:170px}.ct a{min-width:100%}}
+@media(prefers-reduced-motion:reduce){.pop.show{opacity:1}}
+               
