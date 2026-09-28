@@ -106,3 +106,103 @@ function quiz() {
   });
 }
 quiz();
+
+/* Scroll progress bar */
+const bar = document.createElement("div");
+bar.id = "bar";
+document.body.prepend(bar);
+addEventListener("scroll", () => {
+  bar.style.width = scrollY / (document.documentElement.scrollHeight - innerHeight) * 100 + "%";
+}, { passive: true });
+
+/* Latest matches: snapshot of results on 26-27 September 2026. Edit this list to update. */
+const latest = [
+  ["ODI series, 27 September", ["South Africa", "365/9"], ["Australia", "333/10"], 0, "South Africa won by 32 runs"],
+  ["ODI series, 27 September", ["India", "300/2"], ["West Indies", "295/7"], 0, "India won by 8 wickets"],
+  ["ODI series, 27 September", ["England", "355/7"], ["Sri Lanka", "132/10"], 0, "England won by 223 runs"],
+  ["Women's ODI series, 27 September", ["Zimbabwe Women", "140/6"], ["West Indies Women", "139/10"], 0, "Zimbabwe won by 4 wickets"]
+];
+$("#lm").innerHTML = latest.map(([t, a, b, w, r]) =>
+  `<div class="m"><small>${t}</small>` +
+  [a, b].map((x, i) => `<div class="row${i === w ? " win" : ""}"><span>${x[0]}</span><i style="--w:${Math.min(parseInt(x[1]) / 400 * 100, 100)}%"></i><b>${x[1]}</b></div>`).join("") +
+  `<p class="res">${r}</p></div>`).join("");
+document.querySelectorAll(".m").forEach(el => io.observe(el));
+
+/* Team histories */
+const teams = [
+  ["Australia", "Played in the first Test in 1877 and built a reputation for toughness. A run of World Cup wins around the turn of the century made them the side everyone measured themselves against.",
+    ["Six ODI World Cup titles: 1987, 1999, 2003, 2007, 2015 and 2023", "T20 World Cup winners in 2021", "Won the first ever Test, in Melbourne in 1877"]],
+  ["England", "The birthplace of the game. England played in the first Test in 1877 and have contested the Ashes with Australia ever since.",
+    ["ODI World Cup winners in 2019", "T20 World Cup winners in 2010 and 2022", "Won the famous 2005 Ashes series"]],
+  ["India", "Played their first Test in 1932 at Lord's. India grew from underdogs into a cricketing superpower after the 1983 World Cup win.",
+    ["ODI World Cup winners in 1983 and 2011", "T20 World Cup winners in 2007 and 2024", "Won at the Gabba in 2021"]],
+  ["West Indies", "Many islands playing as one team. Their fast bowlers and stroke-makers ruled world cricket in the 1970s and 1980s.",
+    ["Won the first two ODI World Cups, in 1975 and 1979", "T20 World Cup winners in 2012 and 2016", "No Test series defeat from 1980 to 1995"]],
+  ["Pakistan", "Gained Test status in 1952 and quickly became known for flair, fast bowling and dramatic comebacks.",
+    ["ODI World Cup winners in 1992", "T20 World Cup winners in 2009", "Champions Trophy winners in 2017"]],
+  ["Sri Lanka", "Gained Test status in 1982 and changed one-day batting in the 1990s with fearless opening play.",
+    ["ODI World Cup winners in 1996", "T20 World Cup winners in 2014", "Home of Muttiah Muralitharan and his 800 Test wickets"]]
+];
+function showTeam(i) {
+  document.querySelectorAll("#tabs button").forEach((b, j) => b.classList.toggle("on", i === j));
+  const [n, s, h] = teams[i];
+  $("#team").innerHTML = `<div class="tp"><h3>${n}</h3><p>${s}</p><ul>${h.map(x => `<li>${x}</li>`).join("")}</ul></div>`;
+}
+$("#tabs").innerHTML = teams.map(t => `<button>${t[0]}</button>`).join("");
+document.querySelectorAll("#tabs button").forEach((b, i) => b.onclick = () => showTeam(i));
+showTeam(0);
+
+/* Minigame: face an over */
+const G = { runs: 0, ball: 0, x: 0, t: 0, speed: 0, raf: 0, state: "idle" };
+const gball = $("#gball"), bat = $("#bat"), pop = $("#pop"), swingBtn = $("#swing");
+function say(t) {
+  pop.textContent = t;
+  pop.classList.remove("show");
+  void pop.offsetWidth;
+  pop.classList.add("show");
+}
+function bowl() {
+  G.ball++; G.x = 0; G.state = "live";
+  G.speed = 0.05 + G.ball * 0.009;
+  G.t = performance.now();
+  gball.style.left = "0%";
+  $("#gb").textContent = `Ball ${G.ball} of 6`;
+  swingBtn.textContent = "Swing";
+  G.raf = requestAnimationFrame(fly);
+}
+function fly(t) {
+  G.x += G.speed * (t - G.t);
+  G.t = t;
+  gball.style.left = G.x + "%";
+  gball.style.transform = `translate(-50%,${-Math.abs(Math.sin(G.x / 100 * Math.PI * 3)) * 46}px)`;
+  if (G.x >= 97) endBall(0, "Bowled!");
+  else G.raf = requestAnimationFrame(fly);
+}
+function hit() {
+  cancelAnimationFrame(G.raf);
+  bat.classList.remove("sw"); void bat.offsetWidth; bat.classList.add("sw");
+  const d = Math.abs(G.x - 82);
+  if (d < 3) endBall(6, "Six!");
+  else if (d < 7) endBall(4, "Four!");
+  else if (d < 14) endBall(1, "Single");
+  else endBall(0, G.x < 82 ? "Too early" : "Too late");
+}
+function endBall(r, msg) {
+  cancelAnimationFrame(G.raf);
+  G.state = "wait"; G.runs += r;
+  say(msg);
+  $("#gs").textContent = "Runs: " + G.runs;
+  setTimeout(() => {
+    if (G.ball < 6) bowl();
+    else { say(G.runs + " runs"); $("#gb").textContent = "Over complete"; swingBtn.textContent = "Play again"; G.state = "idle"; }
+  }, 1000);
+}
+function act() {
+  if (G.state === "live") hit();
+  else if (G.state === "idle") { G.runs = 0; G.ball = 0; $("#gs").textContent = "Runs: 0"; bowl(); }
+}
+swingBtn.onclick = act;
+$("#field").onclick = act;
+addEventListener("keydown", e => {
+  if (e.code === "Space" && G.state === "live") { e.preventDefault(); hit(); }
+});
