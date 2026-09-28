@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Willow and Leather: a history of cricket</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="#top">Willow and Leather</a>
+  <div>
+    <a href="#history">History</a>
+    <a href="#wins">Historic wins</a>
+    <a href="#records">Records</a>
+    <a href="#quiz">Quiz</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div>
+    <h1>Cricket's story, told through the matches that changed it</h1>
+    <p>From the first written Laws in 1744 to a Super Over at Lord's, explore the moments, teams and players that shaped the game.</p>
+    <a class="btn" href="#history">Explore the timeline</a>
+    <a class="btn ghost" href="#quiz">Test your knowledge</a>
+  </div>
+  <div class="pitch" aria-hidden="true"><div class="ball"></div><div class="shadow"></div></div>
+</header>
+
+<main>
+  <section id="history">
+    <div class="wrap">
+      <h2>How the game grew</h2>
+      <p class="sub">Nine milestones on the way from a village pastime to a global sport.</p>
+      <div id="tl" class="tl"></div>
+    </div>
+  </section>
+
+  <section id="wins" class="dark">
+    <div class="wrap">
+      <h2>Historic wins</h2>
+      <p class="sub">Comebacks, tight finishes and upsets that fans still talk about. Pick a format to filter.</p>
+      <div class="fl" role="group" aria-label="Filter wins by format">
+        <button class="on" data-f="all">All</button>
+        <button data-f="test">Test matches</button>
+        <button data-f="odi">ODI World Cups</button>
+        <button data-f="t20">T20 World Cups</button>
+      </div>
+      <div id="list"></div>
+    </div>
+  </section>
+
+  <section id="records">
+    <div class="wrap">
+      <h2>Records that still stand</h2>
+      <p class="sub">Four legends and the numbers that define them.</p>
+      <div class="rec" id="rec"></div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <div class="wrap">
+      <h2>Test your knowledge</h2>
+      <p class="sub">Five questions from everything on this page.</p>
+      <div class="quiz" id="quiz-box" aria-live="polite"></div>
+    </div>
+  </section>
+</main>
+
+<footer>A small tribute to the game and the people who play it.</footer>
+<script src="script.js"></script>
+</body>
+</html>
